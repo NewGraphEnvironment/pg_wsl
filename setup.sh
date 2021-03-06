@@ -1,3 +1,9 @@
+#!/bin/bash
+set -euxo pipefail
+
+
+
+
 # change to postgres user, alter password
 sudo su - postgres
 psql -c "alter user postgres with password 'postgres'"
@@ -7,10 +13,6 @@ createuser -P -s -e newgraph
 createdb postgis
 # exit postgres user
 exit
-
-psql -d postgis
-CREATE EXTENSION postgis;
-create extension ltree;
 
 # save pg typing
 echo 'export PGDATA=/etc/postgresql/13/main' >> ~/.profile

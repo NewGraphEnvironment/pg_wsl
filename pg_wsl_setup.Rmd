@@ -7,26 +7,38 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 
+# Set up Postgres
 
-`wsl` installed.  `postgres` installed into `wsl` .  Manged now to get bcdata bc2pg bc-airports --db_url postgresql://postgres:postgres@localhost:5432/postgis to run in my command line but not without the db_url option and still cannot for the life of me figure out how to get `bcdata` to burn anything to the db in wsl. Failed. Another 24.25hours invested.  Insane.  Here is a bit of a file tracking what I have been trying.
+`wsl` installed.  Installed `windows terminal preview (wtp)`
+
+Open Ubuntu window in `wtp` and navigate to `cd ~` to get into the home directory
 
 
-
-I have so far set up wsl and have installed a postgresql 13 using https://computingforgeeks.com/how-to-install-postgresql-13-on-ubuntu/.
+Installed a `postgresql 13` as per https://computingforgeeks.com/how-to-install-postgresql-13-on-ubuntu/
 
 <br>
 
 
 Only real mod to this was that I needed to assign a password `sudo passwd postgres` as per https://karansingh1559.medium.com/how-to-set-up-postgresql-on-ubuntu-for-wsl-fcbb777d165b 
 
+`sudo su - postgres`
+
+`psql -c "alter user postgres with password 'postgres'"`
+
+If kyou are re-entering a linux shell then you need to restart the service
+
+`sudo service postgresql start`
+
 <br>
 
 I changed the port to 5434 as I already have postgres on 5432 in my normal windows OS so I will leave there. I changed it as per 
-https://karansingh1559.medium.com/how-to-set-up-postgresql-on-ubuntu-for-wsl-fcbb777d165b with `sudo vi /etc/postgresql/13/main/postgresql.conf`.
+https://karansingh1559.medium.com/how-to-set-up-postgresql-on-ubuntu-for-wsl-fcbb777d165b with 
+
+`sudo vi /etc/postgresql/13/main/postgresql.conf`.
 
 `sudo /etc/init.d/postgresql stop`
 `sudo /etc/init.d/postgresql start`
+`sudo service postgresql restart` ???
 
 <br>
 
@@ -48,9 +60,22 @@ https://help.dreamhost.com/hc/en-us/articles/115006413028-Creating-and-editing-a
 
 <br>
 
-I didn't add postgis at install so will try to add it now with https://computingforgeeks.com/how-to-install-postgis-on-ubuntu-debian/
+add postgis https://computingforgeeks.com/how-to-install-postgis-on-ubuntu-debian/
 
-`psql -d postgis_test`
+`sudo apt update && sudo apt upgrade`
+`sudo apt update`
+`sudo apt install postgis postgresql-13-postgis-3`
+
+ DO NOT CHANGE PERMISSIONS WILLY NILLY - it will wreck the OS see https://serverfault.com/questions/364677/why-is-chmod-r-777-destructive 
+`sudo chmod -R a+rwx /etc/postgresql/13/main/pg_hba.conf`
+`sudo chmod -R a+rwx /etc/postgresql/13/main/postgresql.conf`
+`sudo chmod -R a+rwx .profile`
+
+`psql -d postgis`
+
+
+
+
 `CREATE EXTENSION postgis;`
 `create extension ltree;`
 
@@ -65,9 +90,37 @@ success
 
 Seems to be working.  
 
+#Set up Conda
+
+https://towardsdatascience.com/data-science-on-windows-subsystem-for-linux-2-what-why-and-how-77545c9e5cdf
+
+`wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh`
+
+Give yourself permission
+`chmod +x Miniconda3-latest-Linux-x86_64.sh`
+
+
+open the software and agree to terms
+`./Miniconda3-latest-Linux-x86_64.sh`
+
+Need to close and reopen you terminal
+
+
+`pip install bcdata`
+
+Follow instructions at https://github.com/smnorris/bcdata 
+
+
+How to Terminate running distro
+https://winaero.com/terminate-running-wsl-linux-distro-windows-10/
+in command prompt `wsl --terminate Ubuntu-20.04`
+
 
 This has useful info on seeing where your wsl ip is at
 https://serverfault.com/questions/1041981/how-can-i-connect-to-postgres-running-on-the-windows-host-from-inside-wsl2
+
+`sudo apt install net-tools`
+`sudo apt update && sudo apt upgrade`
 `ifconfig`
 `cat /etc/resolv.conf`
 
@@ -80,6 +133,8 @@ works
 
 `bcdata bc2pg bc-airports --db_url postgresql://newgraph:postgres@localhost:5434/postgis`
 
+
+
 ## from simon
 I think the key here is creating the new db user. Don't use the default postgres user. I think postgres prompts you for a pwd when you do createuser -P -s -e mynewuser.
 
@@ -89,21 +144,38 @@ what a BOSS!
 
 problem with permissions https://www.tenforums.com/tutorials/127857-access-wsl-linux-files-windows-10-a.html 
 
-files are at `\\wsl$\Ubuntu-18.04`
+files are at `\\wsl\Ubuntu-20.04`
  
- to fix permissions to give permissions to a folder and every file and folder inside it. Omit the x from either command if you don’t want the files to be executable.
+`/mnt/c` is path of your C drive
 
- https://superuser.com/questions/1352207/windows-wsl-ubuntu-sees-wrong-permissions-on-files-in-mounted-disk
-`sudo chmod -R a+rwx /etc/postgresql/13/main/pg_hba.conf`
-`sudo chmod -R a+rwx /etc`
-       
+
+##couldn't automate this.  not sure why.  needed to load each setting manully
+run the setup for our postgres settings 
+
+`cd /scripts/setups/setup_default_database.sh`
+
+
+`bcdata bc2pg bc-airports`    
+
+WORKS!!!
+
+note that I did not run the following and it is working
+
+see comments at https://github.com/NewGraphEnvironment/pg_wsl/issues/1 and https://www.postgresql.org/docs/12/auth-pg-hba-conf.html
+
+# open up the database to the world
+echo "local  all  all                trust" >> $PGDATA/pg_hba.conf
+echo "host   all  all  127.0.0.1/32  trust" >> $PGDATA/pg_hba.conf
+echo "host all all 0.0.0.0/0 md5" >> $PGDATA/pg_hba.conf
+echo "listen_addresses = '*'" >> /etc/postgresql/13/main/postgresql.conf
        
 
 List of commands
 
 `\du` list db users and roles
 `\l` see databases and privileges
-
+`\du` list users
+`\dx` list extensions
 
 
 

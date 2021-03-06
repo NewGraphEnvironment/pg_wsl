@@ -1,0 +1,12 @@
+---
+title: "R Studio Setup"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[VERY Basic WSL2 RStudio Install](https://gist.github.com/Thell/f9381c0efea50f36269230a1f90669a8)
+
+links to extra goodies at the bottom
