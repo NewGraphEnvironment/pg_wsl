@@ -1,0 +1,101 @@
+---
+title: "wsl_setup"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# bcfishpass install notes
+
+choked loading line 67 on a 2pg statement. Got hung up and I killed the terminal for the cmd. not sure why it choked.  reran it and it went fine. timeout of some sort?
+
+threw an error early on that it didn't rcognize `parallel` command so
+`sudo apt-get install parallel` or something like that
+`sudo apt update && sudo apt upgrade`
+
+
+snagged and error in 01_prep/04_channel_width when running `mean_annual_precip.sh`
+
+`./mean_annual_precip.sh: line 33: jq: command not found`
+`./mean_annual_precip.sh: line 34: jq: command not found`
+`./mean_annual_precip.sh: line 35: in2csv: command not found`
+
+
+see if `jq` is installed with
+
+`sudo dpkg -l | less` or `sudo dpkg -l jq`
+
+no - so
+
+`sudo apt-get install jq`
+
+and to look for `in2csv` we run `conda list`
+
+no - so
+
+`conda install csvkit`
+`conda install rasterstats`
+
+DONT FORGET
+`sudo apt update && sudo apt upgrade`
+
+going to try again as per rasterstats doc at 
+`sudo apt-get install python-numpy libgdal1h gdal-bin libgdal-dev`
+
+this throws error Package libgdal1h is not available, but is referred to by another package.
+
+going to go with https://pythonhosted.org/rasterstats/
+
+`pip install rasterstats`
+
+going to remove and try again without libgdal1h
+
+`pip uninstall rasterstats`
+
+`sudo apt-get install gdal-bin libgdal-dev`
+
+`conda install rasterstats`
+
+still doesn't work... doesn't show up as a command in rasterio
+
+new plan - going to set up a new virt env and try python 3.7
+
+`conda create -n bcfp2`
+`conda activate bcfp2`
+`conda install python=3.7`
+
+now follow the instructions at https://github.com/smnorris/bcfishpass
+then add the following
+`conda install csvkit`
+`conda install rasterstats`
+
+
+
+##start OVER!!
+cant get rasterstats to work. Going to try again. Uninstalled conda with https://docs.anaconda.com/anaconda/install/uninstall/
+
+using `conda install anaconda-clean`
+
+then removed the whole file.
+
+I DID NOT REMOVE the conda path from .bash_profile as I couldn't find it. `PATH` stuff might be my major downfall
+
+
+I reinstalled Anaconda3-2020.11-Linux-x86_64.sh from https://repo.anaconda.com/archive/ .  I didn't know which one to pick so I just grabbed what I thought was the most recent.
+
+I want to work in rstudio so I followed this post to install https://jmgirard.com/rstudio-wsl2/
+
+sweet!  
+
+`sudo rstudio-server start`
+
+then I get rstudio on http://localhost:8787/ login is my ubuntu username and password
+
+following [this post](https://stackoverflow.com/questions/2419249/how-can-i-stage-and-commit-all-files-including-newly-added-files-using-a-singl) I set up my `git` to replace `git add -A && git commit -m "Your Message"` by typeing
+`git config --global alias.coa "!git add -A && git commit -m"` 
+
+
+
+
