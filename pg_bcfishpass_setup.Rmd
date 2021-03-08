@@ -96,6 +96,8 @@ then I get rstudio on http://localhost:8787/ login is my ubuntu username and pas
 following [this post](https://stackoverflow.com/questions/2419249/how-can-i-stage-and-commit-all-files-including-newly-added-files-using-a-singl) I set up my `git` to replace `git add -A && git commit -m "Your Message"` by typeing
 `git config --global alias.coa "!git add -A && git commit -m"` 
 
+had issues with git .  Uninstalled and reinstalled on windows and got it going again.  Followed this to try to resolve in wsl2 https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git Bloody well works!
+
 
 
 
