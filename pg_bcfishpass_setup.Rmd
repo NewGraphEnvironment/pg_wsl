@@ -98,6 +98,12 @@ following [this post](https://stackoverflow.com/questions/2419249/how-can-i-stag
 
 had issues with git .  Uninstalled and reinstalled on windows and got it going again.  Followed this to try to resolve in wsl2 https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git Bloody well works!
 
+I think this ws key `git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe`
+
+## got it goin
+
+issue was that i had set u the bcfp env inside the conda base env.  
+
 
 
 
