@@ -1,0 +1,42 @@
+---
+title: "Rstudio_setup"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Rstudio
+I want to work in rstudio so I followed this post to install https://jmgirard.com/rstudio-wsl2/
+
+sweet!  
+
+`sudo rstudio-server start`
+
+then I get rstudio on 
+
+http://localhost:8787/ 
+
+
+login is my ubuntu username and password
+
+following [this post](https://stackoverflow.com/questions/2419249/how-can-i-stage-and-commit-all-files-including-newly-added-files-using-a-singl) I set up my `git` to replace `git add -A && git commit -m "Your Message"` by typeing
+`git config --global alias.coa "!git add -A && git commit -m"` 
+
+had issues with git .  Uninstalled and reinstalled on windows and got it going again.  Followed this to try to resolve in wsl2 https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git Bloody well works!
+
+I think this ws key `git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe`
+
+## Packages
+
+Had issues installing `sf` and need to 
+`sudo apt-get install libudunits2-dev` to deal with the `units` package that `sf` depends.
+`sudo apt update && sudo apt upgrade`
+
+Success
+
+
+[VERY Basic WSL2 RStudio Install](https://gist.github.com/Thell/f9381c0efea50f36269230a1f90669a8)
+
+links to extra goodies at the bottom
